@@ -27,7 +27,7 @@ public class SalesDao {
 		Statement st = con.createStatement();
 		ResultSet rs = st.executeQuery("SELECT `id` FROM `TBL_SALES`");
 		
-		String salesId = formattedDate + rs.getInt("id");
+		String salesId = "" + formattedDate + rs.getInt("id");
 		return salesId;	
 	}
 	public ArrayList<SalesReport> getSalesReport() throws Exception{ 

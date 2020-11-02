@@ -5,6 +5,7 @@ public class Product {
 	private String productID, productName;
 	private int quantityOnHand, reorderLevel;
 	private double productUnitPrice;
+	
 	public double getProductUnitPrice() {
 		return productUnitPrice;
 	}
