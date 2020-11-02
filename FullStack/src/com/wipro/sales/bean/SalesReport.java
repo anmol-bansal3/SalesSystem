@@ -1,9 +1,9 @@
 package com.wipro.sales.bean;
-import java.util.*;
+//import java.util.*;
 
 public class SalesReport {
 	private String salesID, productID, productName;
-	java.util.Date salesDate;
+	public java.util.Date date = new java.util.Date();
 	private int quantitySold;
 	private double productUnitPrice, salesPricePerUnit, profitAmount;
 	public String getSalesID() {

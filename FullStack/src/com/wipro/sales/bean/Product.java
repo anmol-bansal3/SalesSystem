@@ -1,5 +1,5 @@
 package com.wipro.sales.bean;
-import java.util.*;
+//import java.util.*;
 
 public class Product {
 	private String productID, productName;
