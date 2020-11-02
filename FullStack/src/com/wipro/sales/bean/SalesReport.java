@@ -1,4 +1,5 @@
 package com.wipro.sales.bean;
+import java.util.*;
 
 public class SalesReport {
 	private String salesID, productID, productName;
