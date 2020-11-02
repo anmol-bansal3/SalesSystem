@@ -3,7 +3,7 @@ package com.wipro.sales.bean;
 
 public class SalesReport {
 	private String salesID, productID, productName;
-	public java.util.Date date = new java.util.Date();
+	public java.util.Date salesDate = new java.util.Date();
 	private int quantitySold;
 	private double productUnitPrice, salesPricePerUnit, profitAmount;
 	public String getSalesID() {

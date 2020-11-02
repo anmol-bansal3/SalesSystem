@@ -12,7 +12,7 @@ public class SalesDao {
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
 		Sales s1 = new Sales();
-		java.sql.Date sqlDate = new java.sql.Date(s1.date.getTime());
+		java.sql.Date sqlDate = new java.sql.Date(s1.salesDate.getTime());
 		String record = "INSERT INTO `TBL_SALES`(`salesID`, `productID`, `salesDate`, `quantitySold`, `salesPricePerUnit`)" + "VALUES ('"+s1.getSalesID()+"','"+s1.getProductID()+"','"+sqlDate+"','"+s1.getQuantitySold()+"','"+s1.getSalesPricePerUnit()+"')";
 		if(st.executeUpdate(record) == 1) {
 			return 1;
