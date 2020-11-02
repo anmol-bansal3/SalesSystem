@@ -33,8 +33,8 @@ public class SalesDao {
 	public ArrayList<SalesReport> getSalesReport() throws Exception{ 
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
-		st.executeQuery("CREATE AS SEQ_SALES_ID SELECT * FROM `TBL_SALES_REPORT`");
-		ResultSet rs = st.executeQuery("SELECT * FROM `SEQ_SALES_ID`");
+		st.executeQuery("CREATE VIEW V_SALES_REPORT AS SELECT `salesID`, `salesDate`, tst.`productID`, `productName`, `quantitySold`, `productUnitPrice`, `salesPricePerUnit` FROM `TBL_SALES` tsa, `TBL_STOCK` tst");
+		ResultSet rs = st.executeQuery("SELECT * FROM `V_SALES_REPORT`");
 		
 		ArrayList<SalesReport> sales = new ArrayList<SalesReport>();
 		while(rs.next()){
@@ -45,7 +45,7 @@ public class SalesDao {
 			temp.setQuantitySold(rs.getInt("quantitySold"));
 			temp.setProductUnitPrice(rs.getDouble("productUnitPrice"));
 			temp.setSalesPricePerUnit(rs.getDouble("salesPricePerUnit"));
-			temp.setProfitAmount(rs.getDouble("profitAmount"));
+			temp.setProfitAmount(rs.getDouble("salesPricePerUnit")-rs.getDouble("productUnitPrice"));
 			
 			sales.add(temp);
 		}
