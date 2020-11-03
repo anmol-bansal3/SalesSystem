@@ -9,27 +9,27 @@ public class StockDao {
 	public int insertStock(Product sales) throws Exception{
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
-		Product p1 = new Product();
-		String record = "INSERT INTO `TBL_STOCK`(`productID`, `productName`, `quantityOnHand`, `productUnitPrice`, `reorderLevel`)" + "VALUES ('"+p1.getProductID()+"','"+p1.getProductName()+"','"+p1.getQuantityOnHand()+"','"+p1.getProductUnitPrice()+"','"+p1.getReorderLevel()+"')";
+		
+		String record = "INSERT INTO `TBL_STOCK`(`productID`, `productName`, `quantityOnHand`, `productUnitPrice`, `reorderLevel`)" + "VALUES ('"+sales.getProductID()+"','"+sales.getProductName()+"','"+sales.getQuantityOnHand()+"','"+sales.getProductUnitPrice()+"','"+sales.getReorderLevel()+"')";
 		if(st.executeUpdate(record) == 1) {
 			return 1;
 		}
 		return 0;
 	}
+	
 	public String generateProductID(String productName) throws Exception{
 	    Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
-		ResultSet rs = st.executeQuery("SELECT `id` FROM `TBL_STOCK`");
-		Product p1 = new Product();
-		String name = p1.getProductName();
-			
-		String productId = "" + name.charAt(0) + name.charAt(1) + rs.getInt("id");
+		ResultSet rs = st.executeQuery("SELECT `id` FROM `TBL_STOCK` WHERE `productName`='" + productName + "'");
+		
+		String productId = "" + productName.charAt(0) + productName.charAt(1) + rs.getInt("id");
 		return productId;	
 	}
+	
 	public int updateStock(String productId, int soldQty) throws Exception {
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
-		ResultSet rs = st.executeQuery("SELECT * FROM `TBL_STOCK`");
+		ResultSet rs = st.executeQuery("SELECT * FROM `TBL_STOCK` WHERE `productID`='" + productId + "'");
 		int value = rs.getInt("quantityOnHand")-soldQty;
 		String record = "UPDATE `TBL_STOCK` SET `quantityOnHand`='" + value + "'WHERE `productID`='" + productId + "'";
 		if(st.executeUpdate(record) == 1) {
@@ -37,6 +37,7 @@ public class StockDao {
 		}
 		return 0;
 	}
+	
 	public int deleteStock(String productID) throws Exception {
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
@@ -46,6 +47,7 @@ public class StockDao {
 		}
 		return 0;
 	}
+	
 	public Product getStock(String productID) throws Exception {
 		Product temp = new Product();
 		Connection con = DBUtil.getDBConnection();

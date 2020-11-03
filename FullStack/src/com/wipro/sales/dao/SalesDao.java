@@ -19,6 +19,7 @@ public class SalesDao {
 		}
 		return 0;
 	}
+	
 	public String generateSalesID(java.util.Date salesDate) throws Exception{
 		DateFormat df = new SimpleDateFormat("yy");
 	    String formattedDate = df.format(Calendar.getInstance().getTime());
@@ -30,10 +31,11 @@ public class SalesDao {
 		String salesId = "" + formattedDate + rs.getInt("id");
 		return salesId;	
 	}
+	
 	public ArrayList<SalesReport> getSalesReport() throws Exception{ 
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
-		st.executeQuery("CREATE VIEW V_SALES_REPORT AS SELECT `salesID`, `salesDate`, tst.`productID`, `productName`, `quantitySold`, `productUnitPrice`, `salesPricePerUnit` FROM `TBL_SALES` tsa, `TBL_STOCK` tst");
+		st.executeQuery("CREATE VIEW V_SALES_REPORT AS SELECT `salesID`, `salesDate`, tst.`productID`, `productName`, `quantitySold`, `productUnitPrice`, `salesPricePerUnit`, (salesPricePerUnit - productUnitPrice) as `profitAmount`  FROM `TBL_SALES` tsa, `TBL_STOCK` tst ORDER BY profitAmount DESC, salesID ASC");
 		ResultSet rs = st.executeQuery("SELECT * FROM `V_SALES_REPORT`");
 		
 		ArrayList<SalesReport> sales = new ArrayList<SalesReport>();

@@ -6,6 +6,7 @@ public class Sales {
 	public java.util.Date salesDate = new java.util.Date();
 	private int quantitySold;
 	private double salesPricePerUnit;
+	
 	public String getSalesID() {
 		return salesID;
 	}

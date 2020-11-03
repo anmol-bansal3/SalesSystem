@@ -6,6 +6,7 @@ public class SalesReport {
 	public java.util.Date salesDate = new java.util.Date();
 	private int quantitySold;
 	private double productUnitPrice, salesPricePerUnit, profitAmount;
+	
 	public String getSalesID() {
 		return salesID;
 	}
