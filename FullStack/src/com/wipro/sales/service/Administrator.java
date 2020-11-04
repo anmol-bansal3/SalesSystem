@@ -1,6 +1,7 @@
 package com.wipro.sales.service;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
@@ -51,12 +52,19 @@ public class Administrator {
 		Date curDate = new Date(new java.util.Date().getTime());
 		
 		String record = "SELECT tst.`productID` FROM `TBL_STOCK` tst, `TBL_SALES` tsa WHERE tst.`productID` = '" + salesobj.getProductID() + "'";
+		ResultSet rs1 = st.executeQuery(record);
+		
+		try {
+			rs1.next();
+				rs1.getString("productID");
+			
+		}
+		catch(SQLException e){
+			return "Unknown Product for sales\n";
+		}
 		
 		if(salesobj == null) {
 			return "Object not valid for insertion\n";
-		}
-		if(st.executeQuery(record) == null) {
-			return "Unknown Product for sales\n";
 		}
 		
 		String select = "select `quantityOnHand` from TBL_STOCK WHERE productID ='" + salesobj.getProductID() + "'";
