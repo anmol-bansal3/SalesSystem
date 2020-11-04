@@ -10,19 +10,23 @@ public class StockDao {
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
 		
-		String record = "INSERT INTO `TBL_STOCK`(`productID`, `productName`, `quantityOnHand`, `productUnitPrice`, `reorderLevel`)" + "VALUES ('"+sales.getProductID()+"','"+sales.getProductName()+"','"+sales.getQuantityOnHand()+"','"+sales.getProductUnitPrice()+"','"+sales.getReorderLevel()+"')";
+		String record = "INSERT INTO `TBL_STOCK`(`productID`, `productName`, `quantityOnHand`, `productUnitPrice`, `reorderLevel`)" + "VALUES ('null', '"+sales.getProductName()+"','"+sales.getQuantityOnHand()+"','"+sales.getProductUnitPrice()+"','"+sales.getReorderLevel()+"')";
 		if(st.executeUpdate(record) == 1) {
 			return 1;
 		}
 		return 0;
 	}
 	
-	public String generateProductID(String productName) throws Exception{
+	public String generateProductID(String Name) throws Exception{
 	    Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
-		ResultSet rs = st.executeQuery("SELECT `id` FROM `TBL_STOCK` WHERE `productName`='" + productName + "'");
+		ResultSet rs = st.executeQuery("SELECT `id` FROM `TBL_STOCK` WHERE `productName`='" + Name + "'");
 		
-		String productId = "" + productName.charAt(0) + productName.charAt(1) + rs.getInt("id");
+		String productId = "NULL";
+		while(rs.next()) {
+			productId = "" + Name.charAt(0) + Name.charAt(1) + rs.getInt("id");
+		}
+		st.executeUpdate("UPDATE `TBL_STOCK` SET `productID`='" + productId + "' WHERE `productName` ='" + Name + "'");
 		return productId;	
 	}
 	

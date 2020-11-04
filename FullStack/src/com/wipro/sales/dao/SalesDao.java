@@ -13,7 +13,7 @@ public class SalesDao {
 		Statement st = con.createStatement();
 		Sales s1 = new Sales();
 		java.sql.Date sqlDate = new java.sql.Date(s1.salesDate.getTime());
-		String record = "INSERT INTO `TBL_SALES`(`salesID`, `productID`, `salesDate`, `quantitySold`, `salesPricePerUnit`)" + "VALUES ('"+s1.getSalesID()+"','"+s1.getProductID()+"','"+sqlDate+"','"+s1.getQuantitySold()+"','"+s1.getSalesPricePerUnit()+"')";
+		String record = "INSERT INTO `TBL_SALES`(`salesID`, `productID`, `salesDate`, `quantitySold`, `salesPricePerUnit`)" + "VALUES ('null','"+s1.getProductID()+"','"+sqlDate+"','"+s1.getQuantitySold()+"','"+s1.getSalesPricePerUnit()+"')";
 		if(st.executeUpdate(record) == 1) {
 			return 1;
 		}
@@ -28,14 +28,17 @@ public class SalesDao {
 		Statement st = con.createStatement();
 		ResultSet rs = st.executeQuery("SELECT `id` FROM `TBL_SALES`");
 		
-		String salesId = "" + formattedDate + rs.getInt("id");
+		String salesId = "";
+		while(rs.next())
+			salesId = "" + formattedDate + rs.getInt("id");
+		
 		return salesId;	
 	}
 	
 	public ArrayList<SalesReport> getSalesReport() throws Exception{ 
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
-		st.executeQuery("CREATE VIEW V_SALES_REPORT AS SELECT `salesID`, `salesDate`, tst.`productID`, `productName`, `quantitySold`, `productUnitPrice`, `salesPricePerUnit`, (salesPricePerUnit - productUnitPrice) as `profitAmount`  FROM `TBL_SALES` tsa, `TBL_STOCK` tst ORDER BY profitAmount DESC, salesID ASC");
+//		st.executeQuery("CREATE VIEW V_SALES_REPORT AS SELECT `salesID`, `salesDate`, tst.`productID`, `productName`, `quantitySold`, `productUnitPrice`, `salesPricePerUnit`, (salesPricePerUnit - productUnitPrice) as `profitAmount`  FROM `TBL_SALES` tsa, `TBL_STOCK` tst ORDER BY profitAmount DESC, salesID ASC");
 		ResultSet rs = st.executeQuery("SELECT * FROM `V_SALES_REPORT`");
 		
 		ArrayList<SalesReport> sales = new ArrayList<SalesReport>();
@@ -47,7 +50,7 @@ public class SalesDao {
 			temp.setQuantitySold(rs.getInt("quantitySold"));
 			temp.setProductUnitPrice(rs.getDouble("productUnitPrice"));
 			temp.setSalesPricePerUnit(rs.getDouble("salesPricePerUnit"));
-			temp.setProfitAmount(rs.getDouble("salesPricePerUnit")-rs.getDouble("productUnitPrice"));
+			temp.setProfitAmount(rs.getDouble("profitAmount"));
 			
 			sales.add(temp);
 		}

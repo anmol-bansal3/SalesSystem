@@ -10,20 +10,21 @@ import com.wipro.sales.util.DBUtil;
 
 public class Administrator {
 	public String insertStock(Product stockobj) throws Exception {
-		if(stockobj.getProductID() == "" || stockobj.getProductID() == "")
-			return "Data not Valid for insertion";
-		else if(stockobj.getProductID().length() > 2) 
-			return "Data not Valid for insertion";
+		if(stockobj.getProductName() == null)
+			return "Data not Valid for insertion \n";
+		else if(stockobj.getProductName().length() < 2) 
+			return "Length should be greater than 2 \n";
 		else {
 			StockDao d1 = new StockDao();
+			d1.insertStock(stockobj);
+			
 			String result = d1.generateProductID(stockobj.getProductName());
 			if(result != null) {
 				stockobj.setProductID(result);
-				d1.insertStock(stockobj);
-				return result;
+				return "Completed insert stock\n";
 			}
 			else {
-				return "Data not Valid for insertion";
+				return "Data not Valid for insertion\n";
 			}
 		}
 	}
@@ -31,55 +32,56 @@ public class Administrator {
 	public String deleteStock(String ProductID) throws Exception {
 		StockDao d1 = new StockDao();
 		if(d1.deleteStock(ProductID) == 1) {
-			return "deleted";
+			return "deleted\n";
 		}
 		else {
-			return "record cannot be deleted";
+			return "record cannot be deleted\n";
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	public String insertSales(Sales salesobj) throws Exception {
 		
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
 		SalesDao sda = new SalesDao();
 		StockDao sdo = new StockDao();
-		Sales s1 = new Sales();
-		Date date = s1.salesDate;
-		java.sql.Date sqlDate = new java.sql.Date(s1.salesDate.getTime());
+		
+//		Date date = salesobj.salesDate;
+		java.sql.Date sqlDate = new java.sql.Date(salesobj.salesDate.getTime());
 		Date curDate = new Date(new java.util.Date().getTime());
 		
 		String record = "SELECT tst.`productID` FROM `TBL_STOCK` tst, `TBL_SALES` tsa WHERE tst.`productID` = '" + salesobj.getProductID() + "'";
 		
-		if(salesobj.getProductID() == null || salesobj.getSalesID() == null) {
-			return "Object not valid for insertion";
+		if(salesobj == null) {
+			return "Object not valid for insertion\n";
 		}
 		if(st.executeQuery(record) == null) {
-			return "Unknown Product for sales";
+			return "Unknown Product for sales\n";
 		}
 		
-		String select = "select `quantityOnHand` from TBL_STOCK where product_id ='" + s1.getProductID() + "'";
+		String select = "select `quantityOnHand` from TBL_STOCK where product_id ='" + salesobj.getProductID() + "'";
 		ResultSet rs = st.executeQuery(select);
-	    if (rs.getInt("quantityOnHand") < s1.getQuantitySold()) {
-	      return "Not enough stock on hand for sale";
+	    if (rs.getInt("quantityOnHand") < salesobj.getQuantitySold()) {
+	      return "Not enough stock on hand for sale\n";
 	    }
 		
 		if (sqlDate.compareTo(curDate) > 0) {
-			return "Invalid Date";
+			return "Invalid Date\n";
 		}
-		
-		
-		s1.setSalesID(sda.generateSalesID(date));
 		
 		if (sda.insertSales(salesobj) == -1) {
-		  return "Error in Sales insertion";
+		  return "Error in Sales insertion\n";
+		}
+		salesobj.setSalesID(sda.generateSalesID(salesobj.salesDate));
+		st.executeUpdate("UPDATE `TBL_STOCK` SET `salesID`='" + salesobj.getSalesID() + "' WHERE `productID` ='" + salesobj.getProductID() + "'");
+		
+		
+		if (sdo.updateStock(salesobj.getProductID(), salesobj.getQuantitySold()) == -1) {
+		   return "Error in stock updation\n";
 		}
 
-		if (sdo.updateStock(s1.getProductID(), s1.getQuantitySold()) == -1) {
-		   return "Error in stock updation";
-		}
-
-		return "Sales Completed";
+		return "Sales Completed\n";
 	}
 	
 	public ArrayList<SalesReport> getSalesReport() throws Exception {
