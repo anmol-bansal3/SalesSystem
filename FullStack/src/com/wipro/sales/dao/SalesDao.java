@@ -11,22 +11,21 @@ public class SalesDao {
 	public int insertSales(Sales sales) throws Exception{
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
-		Sales s1 = new Sales();
-		java.sql.Date sqlDate = new java.sql.Date(s1.salesDate.getTime());
-		String record = "INSERT INTO `TBL_SALES`(`salesID`, `productID`, `salesDate`, `quantitySold`, `salesPricePerUnit`)" + "VALUES ('null','"+s1.getProductID()+"','"+sqlDate+"','"+s1.getQuantitySold()+"','"+s1.getSalesPricePerUnit()+"')";
+		java.sql.Date sqlDate = new java.sql.Date(sales.salesDate.getTime());
+		String record = "INSERT INTO `TBL_SALES`(`productID`, `salesDate`, `quantitySold`, `salesPricePerUnit`)" + "VALUES ('"+sales.getProductID()+"','"+sqlDate+"','"+sales.getQuantitySold()+"','"+sales.getSalesPricePerUnit()+"')";
 		if(st.executeUpdate(record) == 1) {
 			return 1;
 		}
 		return 0;
 	}
 	
-	public String generateSalesID(java.util.Date salesDate) throws Exception{
+	public String generateSalesID(java.util.Date salesDate, String productID) throws Exception{
 		DateFormat df = new SimpleDateFormat("yy");
 	    String formattedDate = df.format(Calendar.getInstance().getTime());
 	    
 	    Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
-		ResultSet rs = st.executeQuery("SELECT `id` FROM `TBL_SALES`");
+		ResultSet rs = st.executeQuery("SELECT `id` FROM `TBL_SALES` WHERE `productID` = '" + productID + "'");
 		
 		String salesId = "";
 		while(rs.next())

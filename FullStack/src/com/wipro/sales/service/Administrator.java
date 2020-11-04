@@ -47,7 +47,6 @@ public class Administrator {
 		SalesDao sda = new SalesDao();
 		StockDao sdo = new StockDao();
 		
-//		Date date = salesobj.salesDate;
 		java.sql.Date sqlDate = new java.sql.Date(salesobj.salesDate.getTime());
 		Date curDate = new Date(new java.util.Date().getTime());
 		
@@ -60,21 +59,23 @@ public class Administrator {
 			return "Unknown Product for sales\n";
 		}
 		
-		String select = "select `quantityOnHand` from TBL_STOCK where product_id ='" + salesobj.getProductID() + "'";
+		String select = "select `quantityOnHand` from TBL_STOCK WHERE productID ='" + salesobj.getProductID() + "'";
 		ResultSet rs = st.executeQuery(select);
-	    if (rs.getInt("quantityOnHand") < salesobj.getQuantitySold()) {
-	      return "Not enough stock on hand for sale\n";
-	    }
+		
+		while(rs.next())
+	    	if (rs.getInt("quantityOnHand") < salesobj.getQuantitySold()) {
+	      		return "Not enough stock on hand for sale\n";
+	    	}
 		
 		if (sqlDate.compareTo(curDate) > 0) {
 			return "Invalid Date\n";
 		}
 		
-		if (sda.insertSales(salesobj) == -1) {
+		if (sda.insertSales(salesobj) == 0) {
 		  return "Error in Sales insertion\n";
 		}
-		salesobj.setSalesID(sda.generateSalesID(salesobj.salesDate));
-		st.executeUpdate("UPDATE `TBL_STOCK` SET `salesID`='" + salesobj.getSalesID() + "' WHERE `productID` ='" + salesobj.getProductID() + "'");
+		salesobj.setSalesID(sda.generateSalesID(salesobj.salesDate, salesobj.getProductID()));
+		st.executeUpdate("UPDATE `TBL_SALES` SET `salesID`='" + salesobj.getSalesID() + "' WHERE `productID` ='" + salesobj.getProductID() + "'");
 		
 		
 		if (sdo.updateStock(salesobj.getProductID(), salesobj.getQuantitySold()) == -1) {

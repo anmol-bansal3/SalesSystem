@@ -20,23 +20,39 @@ public class SalesApplication {
 			
 			if(t == 1) {
 				Product p1 = new Product();
+				System.out.print("Name of the Product: ");
 				String name = scan.next();
 				p1.setProductName(name);
+//				System.out.println();
+				System.out.print("Set product unit price: ");
 				p1.setProductUnitPrice(scan.nextDouble());
+//				System.out.println();
+				System.out.println("Set quantity on Hand: ");
 				p1.setQuantityOnHand(scan.nextInt());
+//				System.out.println();
+				System.out.println("Set reorder level: ");
 				p1.setReorderLevel(scan.nextInt());
+//				System.out.println();
 				
 				String result = a1.insertStock(p1);
 				System.out.print(result);
 			}
 			else if(t == 2) {
-				a1.deleteStock(scan.next());
+				System.out.println("Select ProductID for deletion: ");
+				String result = a1.deleteStock(scan.next());
+				System.out.print(result);
 			}
 			else if(t == 3) {
 				Sales s1 = new Sales();
-				s1.setQuantitySold(scan.nextInt());
-				s1.setSalesPricePerUnit(scan.nextDouble());
+				System.out.println("Name of the product: ");
 				s1.setProductID(scan.next());
+//				System.out.println();
+				System.out.println("Set Quantity Sold: ");
+				s1.setQuantitySold(scan.nextInt());
+//				System.out.println();
+				System.out.println("Set sales price per unit: ");
+				s1.setSalesPricePerUnit(scan.nextDouble());
+//				System.out.println();
 				
 				String result = a1.insertSales(s1);
 				System.out.print(result);

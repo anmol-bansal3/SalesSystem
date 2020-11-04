@@ -34,7 +34,9 @@ public class StockDao {
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
 		ResultSet rs = st.executeQuery("SELECT * FROM `TBL_STOCK` WHERE `productID`='" + productId + "'");
-		int value = rs.getInt("quantityOnHand")-soldQty;
+		int value = 0;
+		if(rs.next())
+			value = rs.getInt("quantityOnHand")-soldQty;
 		String record = "UPDATE `TBL_STOCK` SET `quantityOnHand`='" + value + "'WHERE `productID`='" + productId + "'";
 		if(st.executeUpdate(record) == 1) {
 			return 1;
