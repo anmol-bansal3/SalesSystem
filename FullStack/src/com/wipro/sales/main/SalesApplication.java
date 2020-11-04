@@ -2,6 +2,7 @@ package com.wipro.sales.main;
 
 import java.util.*;
 import com.wipro.sales.bean.*;
+import com.wipro.sales.dao.*;
 import com.wipro.sales.service.Administrator;
 
 public class SalesApplication {
@@ -15,6 +16,7 @@ public class SalesApplication {
 			System.out.println("2.) Delete Stock");
 			System.out.println("3.) Insert Sales");
 			System.out.println("4.) View Sales Report");
+			System.out.println("5.) Get Stocks");
 			System.out.println("Press any other key to exit.");
 			int t = scan.nextInt();
 			
@@ -62,6 +64,12 @@ public class SalesApplication {
 				for(int i = 0; i < result.size(); i++) {
 					System.out.println("SalesId: "+ result.get(i).getSalesID() + "\nProductId: "+ result.get(i).getProductID() + "\nProductName: "+ result.get(i).getProductName() + "\nQuantitySold: "+ result.get(i).getQuantitySold() + "\nProductUnitPrice: "+ result.get(i).getProductUnitPrice() + "\nSalesPricePerUnit: "+ result.get(i).getSalesPricePerUnit() + "\nProfitAmount: "+ result.get(i).getProfitAmount() + "\n");
 				}
+			}
+			else if(t == 5) {
+				StockDao s1 = new StockDao();
+				System.out.println("Select ProductID: ");
+				Product result = s1.getStock(scan.next());
+				System.out.println("productID: "+ result.getProductID() + "\nProductName: "+ result.getProductName() + "\nProductUnitPrice: "+ result.getProductUnitPrice() + "\nQuantityOnHand: " + result.getQuantityOnHand() + "\n");
 			}
 			else {
 				break;

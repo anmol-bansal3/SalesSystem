@@ -59,13 +59,13 @@ public class StockDao {
 		Connection con = DBUtil.getDBConnection();
 		Statement st = con.createStatement();
 		ResultSet rs = st.executeQuery("SELECT * FROM `TBL_STOCK` WHERE `productID`='" + productID + "'");
-		
-		temp.setProductID(rs.getString("productID"));
-		temp.setProductName(rs.getNString("productName"));
-		temp.setQuantityOnHand(rs.getInt("quantityOnHand"));
-		temp.setProductUnitPrice(rs.getDouble("productUnitPrice"));
-		temp.setReorderLevel(rs.getInt("reorderLevel"));
-		
+		while(rs.next()) {
+			temp.setProductID(rs.getString("productID"));
+			temp.setProductName(rs.getString("productName"));
+			temp.setQuantityOnHand(rs.getInt("quantityOnHand"));
+			temp.setProductUnitPrice(rs.getDouble("productUnitPrice"));
+			temp.setReorderLevel(rs.getInt("reorderLevel"));
+		}
 		return temp;
 	}
 }
